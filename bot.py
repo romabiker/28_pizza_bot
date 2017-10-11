@@ -1,18 +1,11 @@
 import telebot
 from jinja2 import Template
 from os import getenv
-import logging
 import re
 
 
 from models import Pizza
-from extensions import db
-from flask.helpers import get_debug_flag
 import application
-
-
-if get_debug_flag():
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 TOKEN = getenv('BOT_TOKEN')
