@@ -32,11 +32,6 @@ with open('templates/greetings.md', 'r') as greetings_file:
 
 
 @bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
-
-
-@bot.message_handler(commands=['start'])
 def greet(message):
     bot.send_message(message.chat.id, greetings_tmpl.render())
 
@@ -63,16 +58,15 @@ def parse_pizza_order(message):
                      content_types=["text"])
 def calculate_order(message):
     bot.send_chat_action(message.chat.id, 'typing')
-    try:
-        pizza_order = parse_pizza_order(message.text)
-        with application.create_app(bot_db_query=True).app_context():
-            order_price = 0
-            for pizza_id, pizza_count in pizza_order:
-                pizza_price = Pizza.get_by_id(pizza_id).price
-                order_price += order_price + pizza_price * pizza_count
-        answer = 'Ваш заказ стоит {price} руб'.format(price=order_price)
-        bot.send_message(message.chat.id, answer)
-    except Exception as e:
+    pizza_order = parse_pizza_order(message.text)
+    with application.create_app(bot_db_query=True).app_context():
+        order_price = 0
+        for pizza_id, pizza_count in pizza_order:
+            pizza_price = Pizza.get_by_id(pizza_id).price
+            order_price += order_price + pizza_price * pizza_count
+    answer = 'Ваш заказ стоит {price} руб'.format(price=order_price)
+    bot.send_message(message.chat.id, answer)
+    if not order_price:
         bot.reply_to(message, '= номер*количество номер*количество')
 
 

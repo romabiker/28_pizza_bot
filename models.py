@@ -36,10 +36,12 @@ class Pizza(db.Model):
         return None
 
     def __repr__(self):
-        return '<Pizza {pizza_id} {title} {choice_title}>'.format(
+        return '<Pizza {pizza_id} {title} {height}cm {weight}gr {price}rb>'.format(
             pizza_id=self.pizza_id,
             title=self.title,
-            choice_title=self.choice_title,
+            height=self.height_cm,
+            weight=self.weight_gr,
+            price=self.price,
         )
 
 
