@@ -1,6 +1,48 @@
-# Here will be catalog models for SQLAlchemy
+from extensions import db
 
-# FIXME move catalog to db
+
+class Pizza(db.Model):
+    pizza_id = db.Column(db.Integer, primary_key=True, index=True)
+    title = db.Column(db.String(150))
+    description = db.Column(db.String(500))
+    height_cm = db.Column(db.Integer)
+    weight_gr = db.Column(db.Integer)
+    price = db.Column(db.Integer)
+    active = db.Column(db.Boolean, default=True)
+
+    @classmethod
+    def create(cls, **kwargs):
+        instance = cls(**kwargs)
+        return instance.save()
+
+    def update(self, commit=True, **kwargs):
+        for attr, value in kwargs.items():
+            setattr(self, attr, value)
+            return commit and self.save() or self
+
+    def save(self, commit=True):
+        db.session.add(self)
+        if commit:
+            db.session.commit()
+        return self
+
+    @classmethod
+    def get_by_id(cls, record_id):
+        if any(
+                (isinstance(record_id, (str, bytes)) and record_id.isdigit(),
+                 isinstance(record_id, (int, float))),
+        ):
+            return cls.query.get(int(record_id))
+        return None
+
+    def __repr__(self):
+        return '<Pizza {pizza_id} {title} {choice_title}>'.format(
+            pizza_id=self.pizza_id,
+            title=self.title,
+            choice_title=self.choice_title,
+        )
+
+
 catalog = [
     {
         'title': 'Маргарита',

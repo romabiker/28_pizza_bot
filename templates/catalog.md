@@ -1,10 +1,8 @@
 Пицца из нашего меню:
 
-{% for entry in catalog -%}
-*{{ entry.title }} #{{loop.index}}*
-{{ entry.description }}
-    {%- for choice in entry.choices %}
-        {{ choice.title }} - *{{ choice.price }} руб.*
-    {%- endfor %}
-
+{% for title, choices in catalog|groupby('title') %}
+*{{ title }}*
+{% for pizza in choices %}{%- if loop.first %}{{ pizza.description }}{% endif %}
+*{{ pizza.pizza_id }}* / {{ pizza.height_cm }}см ({{ pizza.weight_gr }}гр) - *{{ pizza.price }} руб.*
+{%- endfor %}
 {% endfor %}
